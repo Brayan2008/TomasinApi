@@ -29,4 +29,5 @@ public class Rol {
     mejor usar Long en lugar de Integer para el id, y poner @Table(name = "rol") 
     explícitamente. Además, inicializa estado a true para que coincida con el valor 
     por defecto de la BD."*/
+    //ACEPTADA. Se eliminarán los comentarios en la siguiente version de este commit
 }

@@ -18,10 +18,6 @@ public class OrdenDanio {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "id_orden", nullable = false)
-    private OrdenServicio orden;
-
     @Enumerated(EnumType.STRING)
     @Column(name = "tipo_danio", nullable = false)
     private TipoDanio tipoDanio;
@@ -42,4 +38,9 @@ public class OrdenDanio {
     @ManyToOne
     @JoinColumn(name = "id_foto")
     private FotoOrden foto;
+
+    @ManyToOne
+    @JoinColumn(name = "id_orden", nullable = false)
+    private OrdenServicio orden;
+
 }

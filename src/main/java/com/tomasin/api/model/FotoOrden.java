@@ -27,11 +27,17 @@ public class FotoOrden {
     private String ruta;
 
     @Column(name = "fecha_subida", nullable = false)
-    private LocalDateTime fechaSubida = LocalDateTime.now();
+    private LocalDateTime fechaSubida;
 
     @Column(name = "hash_archivo", length = 64)
     private String hashArchivo;
 
     @Column(name = "procesado_ia", nullable = false)
-    private Boolean procesadoIa = false;
+    private boolean procesadoIa = false;
+
+    @PrePersist
+    public void prePersist() {
+        fechaSubida = LocalDateTime.now();
+    }
+
 }

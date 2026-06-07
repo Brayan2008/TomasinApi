@@ -19,10 +19,6 @@ public class Vehiculo {
     @Column(length = 7, nullable = false, unique = true)
     private String placa;
 
-    @ManyToOne
-    @JoinColumn(name = "id_modelo", nullable = false)
-    private Modelo modelo;
-
     @Column(length = 17, nullable = false, unique = true)
     private String chasis;
 
@@ -37,10 +33,15 @@ public class Vehiculo {
     @Column(nullable = false)
     private Boolean estado = true;
 
+    @Column(name = "ultimo_km", nullable = false)
+    private Integer ultimoKm = 0;
+
+    @ManyToOne
+    @JoinColumn(name = "id_modelo", nullable = false)
+    private Modelo modelo;
+
     @ManyToOne
     @JoinColumn(name = "id_cliente", nullable = false)
     private Cliente cliente;
 
-    @Column(name = "ultimo_km", nullable = false)
-    private Integer ultimoKm = 0;
 }

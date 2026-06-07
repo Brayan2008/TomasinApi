@@ -15,10 +15,6 @@ public class OrdenChecklist {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "id_orden", nullable = false)
-    private OrdenServicio orden;
-
     @Column(name = "item_index", nullable = false)
     private Integer itemIndex;
 
@@ -30,4 +26,9 @@ public class OrdenChecklist {
 
     @Column(length = 255)
     private String observacion;
+
+    @ManyToOne
+    @JoinColumn(name = "id_orden", nullable = false)
+    private OrdenServicio orden;
+
 }

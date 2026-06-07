@@ -18,18 +18,6 @@ public class ServicioAsignado {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "id_orden", nullable = false)
-    private OrdenServicio orden;
-
-    @ManyToOne
-    @JoinColumn(name = "id_servicio_catalogo", nullable = false)
-    private ServicioCatalogo servicioCatalogo;
-
-    @ManyToOne
-    @JoinColumn(name = "id_mecanico", nullable = false)
-    private Usuario mecanico;  // Usuario con rol MECANICO
-
     @Column(name = "precio_acordado", nullable = false, precision = 10, scale = 2)
     private BigDecimal precioAcordado;
 
@@ -45,4 +33,17 @@ public class ServicioAsignado {
 
     @Column(name = "motivo_cancelacion", columnDefinition = "TEXT")
     private String motivoCancelacion;
+
+    @ManyToOne
+    @JoinColumn(name = "id_orden", nullable = false)
+    private OrdenServicio orden;
+
+    @ManyToOne
+    @JoinColumn(name = "id_servicio_catalogo", nullable = false)
+    private ServicioCatalogo servicioCatalogo;
+
+    @ManyToOne
+    @JoinColumn(name = "id_mecanico", nullable = false)
+    private Usuario mecanico;  // Usuario con rol MECANICO
+
 }

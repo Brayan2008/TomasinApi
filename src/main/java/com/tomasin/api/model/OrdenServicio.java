@@ -24,7 +24,7 @@ public class OrdenServicio {
     private String numeroCorrelativo;
 
     @Column(name = "fecha_ingreso", nullable = false)
-    private LocalDateTime fechaIngreso = LocalDateTime.now();
+    private LocalDateTime fechaIngreso;
 
     @Column(name = "fecha_estimada_entrega", nullable = false)
     private LocalDate fechaEstimadaEntrega;
@@ -54,10 +54,9 @@ public class OrdenServicio {
     @Column(name = "costo_total", nullable = false, precision = 10, scale = 2)
     private BigDecimal costoTotal = BigDecimal.ZERO;
 
-    @Column(columnDefinition = "TEXT")
     private String observaciones;
 
-    @Column(name = "motivo_anulacion", columnDefinition = "TEXT")
+    @Column(name = "motivo_anulacion")
     private String motivoAnulacion;
 
     @Column(name = "fecha_anulacion")
@@ -65,4 +64,15 @@ public class OrdenServicio {
 
     @Version
     private Integer version = 0;
+
+    @PrePersist
+    public void prePersist() {
+        fechaIngreso = LocalDateTime.now();
+    }
+
+    @PreRemove
+    private void preDelete() {
+        fechaAnulacion = LocalDateTime.now();
+    }
+
 }

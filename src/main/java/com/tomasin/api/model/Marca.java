@@ -8,11 +8,15 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
 @Entity
 @Getter
 @Setter
 @Table(name = "marca")
+@SQLDelete(sql = "UPDATE marca SET estado = false WHERE id = ?")
+@SQLRestriction("estado = true")
 public class Marca {
     
     @Id

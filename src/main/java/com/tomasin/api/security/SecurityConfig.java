@@ -6,7 +6,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -16,8 +15,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
-import jakarta.servlet.http.HttpServletResponse;
 
 @Configuration
 @EnableWebSecurity
@@ -38,14 +35,10 @@ public class SecurityConfig {
                 // Manejo de excepciones: devuelve 401 si no esta autenticado
                 .csrf(t -> t.disable())
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .exceptionHandling(e -> e.authenticationEntryPoint(
-                        (request, response, authException) -> response.sendError(HttpServletResponse.SC_UNAUTHORIZED,
-                                "No esta autorizado a acceder a este recurso")))
                 .authorizeHttpRequests(r -> {
                     r.requestMatchers("/auth/login").permitAll()
                     .anyRequest().authenticated();
                 })
-                .formLogin(Customizer.withDefaults())
                 .authenticationProvider(authenticationProvider())
                 // Agrega el filtro JWT antes del filtro de autenticacion por usuario/contraseña
                 .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)

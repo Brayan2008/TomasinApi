@@ -3,6 +3,8 @@ package com.tomasin.api.model;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
 import java.math.BigDecimal;
 
@@ -10,6 +12,8 @@ import java.math.BigDecimal;
 @Table(name = "servicios_catalogo")
 @Getter
 @Setter
+@SQLDelete(sql = "UPDATE servicios_catalogo SET estado = false WHERE id = ?")
+@SQLRestriction("estado = true")
 public class ServicioCatalogo {
 
     @Id

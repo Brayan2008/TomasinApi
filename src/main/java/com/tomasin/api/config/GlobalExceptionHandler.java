@@ -30,5 +30,10 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, String>> handleDataIntegration(DataIntegrityViolationException ex) {
         return ResponseEntity.badRequest().body(Map.of("error", ex.getMostSpecificCause().getMessage()));
     }
+    
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<Map<String, String>> handleRuntimeException(RuntimeException ex) {
+        return ResponseEntity.badRequest().body(Map.of("error", ex.getMessage()));
+    }
 
 }

@@ -1,5 +1,8 @@
 package com.tomasin.api.service;
 
-public interface IClienteService{
-    
+import com.tomasin.api.dto.ClienteDTO.ClienteRequestDTO;
+import com.tomasin.api.dto.ClienteDTO.ClienteResponseDTO;
+
+public interface IClienteService extends CrudService<ClienteRequestDTO, ClienteResponseDTO, ClienteRequestDTO, Long> {
+
 }

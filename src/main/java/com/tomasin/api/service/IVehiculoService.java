@@ -1,5 +1,8 @@
 package com.tomasin.api.service;
 
-public interface IVehiculoService {
-    
+import com.tomasin.api.dto.VehiculoDTO.VehiculoRequestDTO;
+import com.tomasin.api.dto.VehiculoDTO.VehiculoResponseDTO;
+
+public interface IVehiculoService extends CrudService<VehiculoRequestDTO, VehiculoResponseDTO, VehiculoRequestDTO, Long> {
+
 }

@@ -1,5 +1,8 @@
 package com.tomasin.api.service;
 
-public interface IServicioService {
-    
+import com.tomasin.api.dto.ServicioDTO.ServicioRequestDTO;
+import com.tomasin.api.dto.ServicioDTO.ServicioResponseDTO;
+
+public interface IServicioService extends CrudService<ServicioRequestDTO, ServicioResponseDTO, ServicioRequestDTO, Long> {
+
 }

@@ -4,11 +4,15 @@ import com.tomasin.api.enums.TipoDocumento;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-                    
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
+
 @Getter
 @Setter
 @Entity
 @Table(name = "clientes")
+@SQLDelete(sql = "UPDATE clientes SET estado = false WHERE id = ?")
+@SQLRestriction("estado = true")
 public class Cliente {
 
     @Id

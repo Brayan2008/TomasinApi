@@ -1,8 +1,13 @@
 package com.tomasin.api.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
 import java.time.Year;
 
@@ -10,6 +15,11 @@ import java.time.Year;
 @Table(name = "vehiculos")
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@SQLDelete(sql = "UPDATE vehiculos SET estado = false WHERE id = ?")
+@SQLRestriction("estado = true")
 public class Vehiculo {
 
     @Id
@@ -30,9 +40,11 @@ public class Vehiculo {
 
     private Year anio;
 
+    @Builder.Default
     @Column(nullable = false)
     private Boolean estado = true;
 
+    @Builder.Default
     @Column(name = "ultimo_km", nullable = false)
     private Integer ultimoKm = 0;
 

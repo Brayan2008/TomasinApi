@@ -3,11 +3,15 @@ package com.tomasin.api.model;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
 @Entity
 @Table(name = "modelo")
 @Getter
 @Setter
+@SQLDelete(sql = "UPDATE modelo SET estado = false WHERE id = ?")
+@SQLRestriction("estado = true")
 public class Modelo {
 
     @Id

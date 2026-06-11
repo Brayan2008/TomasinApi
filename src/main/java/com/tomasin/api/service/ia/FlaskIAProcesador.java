@@ -28,11 +28,11 @@ public class FlaskIAProcesador implements IIAProcesador {
     }
 
     @Override
-    public List<DeteccionDanioDTO> procesar(byte[] imagen) {
+    public List<DeteccionDanioDTO> procesar(byte[] imagen, String contentType) {
         var resource = new ByteArrayResource(imagen) {
             @Override
             public String getFilename() {
-                return "imagen.jpg";
+                return contentType.startsWith("image/png") ? "imagen.png" : "imagen.jpg";
             }
         };
 

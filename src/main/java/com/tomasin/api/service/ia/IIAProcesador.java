@@ -4,5 +4,5 @@ import java.util.List;
 
 public interface IIAProcesador {
 
-    List<DeteccionDanioDTO> procesar(byte[] imagen);
+    List<DeteccionDanioDTO> procesar(byte[] imagen, String contentType);
 }

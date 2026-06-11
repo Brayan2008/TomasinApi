@@ -69,9 +69,15 @@ public class FotoOrdenService implements IFotoOrdenService {
         return FotoOrdenResponseDTO.toResponse(saved);
     }
 
+    private static final long MAX_FOTOS_POR_ORDEN = 8;
+
     @Override
     public FotoOrdenResponseDTO guardarConArchivo(MultipartFile archivo, Long idOrden, boolean procesadoIa) {
         validarImagen(archivo);
+
+        if (fotoOrdenRepository.countByOrdenId(idOrden) >= MAX_FOTOS_POR_ORDEN) {
+            throw new RuntimeException("La orden ya tiene " + MAX_FOTOS_POR_ORDEN + " fotos (maximo permitido)");
+        }
 
         String nombreOriginal = archivo.getOriginalFilename();
         String extension = obtenerExtension(nombreOriginal);
@@ -99,7 +105,7 @@ public class FotoOrdenService implements IFotoOrdenService {
             var saved = fotoOrdenRepository.save(foto);
 
             if (procesadoIa) {
-                procesarConIA(saved, bytes);
+                procesarConIA(saved, bytes, archivo.getContentType());
             }
 
             return FotoOrdenResponseDTO.toResponse(saved);
@@ -155,7 +161,7 @@ public class FotoOrdenService implements IFotoOrdenService {
                 Path filePath = Path.of(saved.getRuta());
                 if (Files.exists(filePath)) {
                     byte[] bytes = Files.readAllBytes(filePath);
-                    procesarConIA(saved, bytes);
+                    procesarConIA(saved, bytes, Files.probeContentType(filePath));
                 }
             } catch (IOException e) {
                 throw new RuntimeException("Error al leer la imagen para procesar IA", e);
@@ -240,10 +246,10 @@ public class FotoOrdenService implements IFotoOrdenService {
         }
     }
 
-    private void procesarConIA(FotoOrden foto, byte[] bytes) {
+    private void procesarConIA(FotoOrden foto, byte[] bytes, String contentType) {
         ordenDanioRepository.deleteByFotoId(foto.getId());
 
-        var detecciones = iaProcesador.procesar(bytes);
+        var detecciones = iaProcesador.procesar(bytes, contentType != null ? contentType : "image/jpeg");
         for (var d : detecciones) {
             OrdenDanio danio = new OrdenDanio();
             danio.setTipoDanio(d.tipo());

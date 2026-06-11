@@ -14,4 +14,6 @@ public interface FotoOrdenRepository extends JpaRepository<FotoOrden, Long> {
      * y que pertenecen a órdenes en estado REGISTRADA.
      * Usado por el job programado de IA.*/
     List<FotoOrden> findByProcesadoIaFalseAndOrdenEstado(String estado); // para IA
+
+    long countByOrdenId(Long ordenId);
 }

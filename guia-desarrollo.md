@@ -1,4 +1,4 @@
-# Guía de Desarrollo – Sistema de Gestión de Taller Tomasin SAC
+# Guía de Desarrollo – Sistema de Gestión de Taller Tomasin SAC (v7.2)
 
 ## 1. Resumen del proyecto
 
@@ -199,3 +199,47 @@ INSERT INTO servicios_catalogo (nombre, descripcion, precio_base) VALUES
 ('Alineación y balanceo', 'Alineación de las cuatro ruedas', 120.00),
 ('Frenos delanteros', 'Cambio de pastillas y rectificado', 150.00),
 ('Diagnóstico computarizado', 'Escaneo de centralita', 60.00);
+
+## 3. Integración con IA (Flask)
+
+El endpoint `POST /api/fotos` recibe una imagen vía multipart. Si el parámetro `procesadoIa=true`, el sistema envía la imagen a un microservicio Flask que procesa la imagen con IA y devuelve un JSON con las detecciones de daños.
+
+Cada detección se guarda automáticamente como un registro en `orden_danios` con `origen=IA`, asociado a la foto y orden correspondientes.
+
+### Configuración en `application.properties`
+
+```properties
+# Upload de archivos
+spring.servlet.multipart.max-file-size=10MB
+spring.servlet.multipart.max-request-size=10MB
+app.upload.dir=uploads/fotos
+
+# URL del microservicio Flask de IA
+app.ia.flask.url=http://localhost:5000/api/procesar
+```
+
+### Patrón Adapter para IA
+
+| Clase | Perfil | Descripción |
+|-------|--------|-------------|
+| `IIAProcesador` | — | Interfaz `procesar(byte[])` → `List<DeteccionDanioDTO>` |
+| `MockIAProcesador` | `dev` | Devuelve lista vacía para desarrollo sin Flask |
+| `FlaskIAProcesador` | `default` | POST multipart HTTP al Flask, parsea respuesta JSON |
+
+El JSON esperado del endpoint Flask:
+
+```json
+{
+  "detecciones": [
+    {"tipoDanio": "ABOLLADO", "posX": 0.35, "posY": 0.72, "certeza": 0.95}
+  ]
+}
+```
+
+### Flujo de fotos
+
+1. `POST /api/fotos` → guarda archivo en `uploads/fotos/{UUID}.jpg`, calcula SHA-256, persiste `FotoOrden`
+2. Si `procesadoIa=true` → llama al adapter IA → crea `OrdenDanio` × N (`origen=IA`)
+3. `GET /api/fotos/archivo/{filename}` → sirve la imagen desde disco
+4. `DELETE /api/fotos/{id}` → elimina de BD y archivo del disco
+5. `PUT /api/fotos/{id}` → reemplaza archivo (opcional) + reprocesa IA si cambio

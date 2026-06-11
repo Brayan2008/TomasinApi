@@ -13,4 +13,6 @@ public interface OrdenDanioRepository extends JpaRepository<OrdenDanio, Long> {
     List<OrdenDanio> findByOrdenId(Long ordenId);
     /*Elimina todos los daños de una orden. Útil si se cancela la orden.*/
     void deleteByOrdenId(Long ordenId);
+
+    void deleteByFotoId(Long fotoId);
 }

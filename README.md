@@ -105,6 +105,11 @@ src/main/java/com/tomasin/api/
     ├── IServicioService.java
     ├── IUsuarioAdminService.java
     ├── IVehiculoService.java
+    ├── ia/
+    │   ├── IIAProcesador.java
+    │   ├── DeteccionDanioDTO.java
+    │   ├── MockIAProcesador.java
+    │   └── FlaskIAProcesador.java
     └── jpa/
         ├── ClienteService.java
         ├── FotoOrdenService.java
@@ -144,6 +149,8 @@ Variables disponibles y sus valores por defecto:
 | `SHOW_SQL` | Mostrar SQL en consola | `false` |
 | `JWT_SECRET` | Clave secreta para firmar JWT | `mySecretKey` |
 | `JWT_EXPIRATION` | Tiempo de expiración del token en ms | `1800000` (30 min) |
+| `app.upload.dir` | Directorio donde se guardan las fotos | `uploads/fotos` |
+| `app.ia.flask.url` | URL del microservicio Flask de IA | `http://localhost:5000/api/procesar` |
 
 ## Ejecución
 
@@ -202,14 +209,41 @@ El proyecto incluye configuración de lanzamiento en `.vscode/launch.json` que c
 | GET/PUT/DELETE | `/api/checklist/{id}` | Obtener / Actualizar / Eliminar ítem |
 | GET/POST | `/api/danios` | Listar / Crear daños |
 | GET/PUT/DELETE | `/api/danios/{id}` | Obtener / Actualizar / Eliminar daño |
-| GET/POST | `/api/fotos` | Listar / Crear fotos |
-| GET/PUT/DELETE | `/api/fotos/{id}` | Obtener / Actualizar / Eliminar foto |
+| GET/POST | `/api/fotos` | Listar / Subir foto (POST: multipart) |
+| GET/PUT/DELETE | `/api/fotos/{id}` | Obtener / Actualizar (PUT: multipart) / Eliminar foto |
+| GET | `/api/fotos/archivo/{filename}` | Servir imagen desde disco |
 
 ### Borrado lógico
 
 Las entidades maestras (`marca`, `rol`, `servicio_catalogo`, `cliente`, `modelo`, `vehiculo`) usan **borrado lógico**: el registro se marca como `estado = false` en lugar de eliminarse físicamente. Las consultas estándar solo devuelven registros activos.
 
 Las entidades transaccionales (`ordenes`, `servicios_asignados`) se **cancelan** mediante `DELETE` + query param `?motivo=`, cambiando su estado a `ANULADA` / `CANCELADO`.
+
+## IA Adapter (Patrón Adapter)
+
+El sistema usa el patrón Adapter para procesar fotos con IA. Según el perfil activo:
+
+| Perfil | Bean | Comportamiento |
+|--------|------|----------------|
+| `dev` | `MockIAProcesador` | Devuelve lista vacía (sin Flask) |
+| `default` / otros | `FlaskIAProcesador` | Envía la imagen al endpoint `app.ia.flask.url` y recibe detecciones de daños |
+
+La interfaz `IIAProcesador` define el contrato: `List<DeteccionDanioDTO> procesar(byte[] imagen)`. El JSON esperado de Flask:
+
+```json
+{
+  "detecciones": [
+    { "tipoDanio": "ABOLLADO", "posX": 0.35, "posY": 0.72, "certeza": 0.95 },
+    { "tipoDanio": "RAYADO", "posX": 0.15, "posY": 0.40, "certeza": 0.88 }
+  ]
+}
+```
+
+Los campos `certeza` se ignoran. Cada detección se guarda como `OrdenDanio` con `origen=IA`.
+
+## Upload de archivos
+
+Tamaño máximo: 10 MB. Solo se aceptan imágenes (`image/*`). Los archivos se guardan en `uploads/fotos/` con nombre UUID + extensión original. El SHA-256 del archivo se calcula automáticamente.
 
 ## Respuestas HTTP
 

@@ -34,6 +34,7 @@ public class FotoOrdenDTO {
             @NotBlank String nombreArchivo,
             @NotBlank String ruta,
             String hashArchivo,
+            boolean procesadoIa,
             @NotNull Long idOrden) {
 
         public FotoOrden toEntity() {
@@ -41,6 +42,7 @@ public class FotoOrdenDTO {
             f.setNombreArchivo(this.nombreArchivo);
             f.setRuta(this.ruta);
             f.setHashArchivo(this.hashArchivo);
+            f.setProcesadoIa(this.procesadoIa);
             return f;
         }
     }

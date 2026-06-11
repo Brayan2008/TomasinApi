@@ -156,15 +156,37 @@
 
 ## Foto de Orden
 
-### POST / PUT `/api/fotos`
-```json
-{
-  "nombreArchivo": "foto_danio_001.jpg",
-  "ruta": "/uploads/ordenes/1/foto_danio_001.jpg",
-  "hashArchivo": "a1b2c3d4e5f6...",
-  "idOrden": 1
-}
+### POST `/api/fotos`
 ```
+Content-Type: multipart/form-data
+
+Campos:
+  archivo: (imagen, obligatorio)
+  idOrden: 1 (Long, obligatorio)
+  procesadoIa: false (boolean, opcional, default false)
+```
+
+Ejemplo con curl:
+```bash
+curl -X POST http://localhost:8080/api/fotos \
+  -H "Authorization: Bearer <token>" \
+  -F "archivo=@foto_danio_001.jpg" \
+  -F "idOrden=1" \
+  -F "procesadoIa=true"
+```
+
+### PUT `/api/fotos/{id}`
+```
+Content-Type: multipart/form-data
+
+Campos:
+  archivo: (imagen, opcional — si se envía, reemplaza la foto anterior)
+  idOrden: 1 (Long, obligatorio)
+  procesadoIa: false (boolean, opcional, default false)
+```
+
+### GET `/api/fotos/archivo/{filename}`
+Sirve la imagen almacenada. El `{filename}` es el nombre único (UUID) del archivo, que se obtiene del campo `ruta` en la respuesta del POST/GET.
 
 ---
 

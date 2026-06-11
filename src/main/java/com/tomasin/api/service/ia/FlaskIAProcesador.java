@@ -6,39 +6,61 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.http.client.MultipartBodyBuilder;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestClient;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.web.client.RestTemplate;
+
+import lombok.extern.log4j.Log4j2;
 
 @Component
+@Log4j2
 @Profile("!dev")
 public class FlaskIAProcesador implements IIAProcesador {
 
-    private final RestClient restClient;
+    private final String flaskUrl;
+    private final RestTemplate restTemplate = new RestTemplate();
 
     public FlaskIAProcesador(@Value("${app.ia.flask.url}") String flaskUrl) {
-        this.restClient = RestClient.create(flaskUrl);
+        this.flaskUrl = flaskUrl;
     }
 
     @Override
     public List<DeteccionDanioDTO> procesar(byte[] imagen) {
-        var body = new MultipartBodyBuilder();
-        body.part("imagen", new ByteArrayResource(imagen))
-                .filename("imagen.jpg")
-                .contentType(MediaType.IMAGE_JPEG);
+        var resource = new ByteArrayResource(imagen) {
+            @Override
+            public String getFilename() {
+                return "imagen.jpg";
+            }
+        };
 
-        var respuesta = restClient.post()
-                .contentType(MediaType.MULTIPART_FORM_DATA)
-                .body(body.build())
-                .retrieve()
-                .body(FlaskResponse.class);
+        var body = new LinkedMultiValueMap<String, Object>();
+        body.add("imagen", resource);
 
-        if (respuesta == null || respuesta.detecciones() == null) {
+        var headers = new HttpHeaders();
+        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+
+        var request = new HttpEntity<>(body, headers);
+
+        log.info("Enviando imagen a Flask: {}", flaskUrl);
+
+        DeteccionDanioDTO[] respuesta;
+
+        try {
+            respuesta = restTemplate.postForObject(flaskUrl, request, DeteccionDanioDTO[].class);
+        } catch (Exception e) {
+            log.error("Error al comunicar con Flask", e);
             return Collections.emptyList();
         }
-        return respuesta.detecciones();
-    }
 
-    record FlaskResponse(List<DeteccionDanioDTO> detecciones) {}
+        if (respuesta == null || respuesta.length == 0) {
+            log.info("Flask no devolvio detecciones");
+            return Collections.emptyList();
+        }
+
+        log.info("Detecciones recibidas: {}", respuesta.length);
+        return List.of(respuesta);
+    }
 }

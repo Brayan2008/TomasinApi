@@ -109,7 +109,8 @@ public class FotoOrdenService implements IFotoOrdenService {
     }
 
     @Override
-    public FotoOrdenResponseDTO actualizarConArchivo(Long id, MultipartFile archivo, Long idOrden, boolean procesadoIa) {
+    public FotoOrdenResponseDTO actualizarConArchivo(Long id, MultipartFile archivo, Long idOrden,
+            boolean procesadoIa) {
         var foto = fotoOrdenRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Foto no encontrada"));
 
@@ -245,9 +246,9 @@ public class FotoOrdenService implements IFotoOrdenService {
         var detecciones = iaProcesador.procesar(bytes);
         for (var d : detecciones) {
             OrdenDanio danio = new OrdenDanio();
-            danio.setTipoDanio(d.tipoDanio());
-            danio.setPosX(d.posX() != null ? d.posX() : BigDecimal.ZERO);
-            danio.setPosY(d.posY() != null ? d.posY() : BigDecimal.ZERO);
+            danio.setTipoDanio(d.tipo());
+            danio.setPosX(d.pos_X() != null ? d.pos_X() : BigDecimal.ZERO);
+            danio.setPosY(d.pos_Y() != null ? d.pos_Y() : BigDecimal.ZERO);
             danio.setOrigen(OrigenDanio.IA);
             danio.setObservacion("Detectado por IA");
             danio.setFoto(foto);

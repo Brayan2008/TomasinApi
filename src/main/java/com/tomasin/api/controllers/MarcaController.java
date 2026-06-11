@@ -27,7 +27,7 @@ import jakarta.validation.Valid;
 public class MarcaController {
 
     @Autowired
-    private IMarcaService marcaService;
+    private IMarcaService marcaService; 
 
     @GetMapping
     public ResponseEntity<?> listar() {

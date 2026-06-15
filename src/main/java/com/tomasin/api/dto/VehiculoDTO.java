@@ -2,23 +2,36 @@ package com.tomasin.api.dto;
 
 import java.time.Year;
 
+import com.tomasin.api.dto.ClienteDTO.ClienteResponseDTO;
+import com.tomasin.api.dto.ModeloDTO.ModeloResponseDTO;
 import com.tomasin.api.model.Vehiculo;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 public class VehiculoDTO {
 
-    public record VehiculoResponseDTO(Long id, String placa, String chasis, String motor,
-            String color, Year anio, Integer ultimoKm,
-            Long idModelo, String nombreModelo,
-            Long idCliente, String nombreCliente) {
+    public record VehiculoResponseDTO(
+            Long id,
+            String placa,
+            String chasis,
+            String motor,
+            String color,
+            Year anio,
+            Integer ultimoKm,
+            ModeloResponseDTO modelo,
+            ClienteResponseDTO cliente) {
 
         public static VehiculoResponseDTO toResponse(Vehiculo v) {
-            return new VehiculoResponseDTO(v.getId(), v.getPlaca(), v.getChasis(), v.getMotor(),
-                    v.getColor(), v.getAnio(), v.getUltimoKm(),
-                    v.getModelo().getId(), v.getModelo().getNombre(),
-                    v.getCliente().getId(),
-                    v.getCliente().getNombres() + " " + v.getCliente().getApellidos());
+            return new VehiculoResponseDTO(v.getId(),
+                    v.getPlaca(),
+                    v.getChasis(),
+                    v.getMotor(),
+                    v.getColor(),
+                    v.getAnio(),
+                    v.getUltimoKm(),
+                    ModeloResponseDTO.toResponse(v.getModelo()),
+                    ClienteResponseDTO.toResponse(v.getCliente())
+                );
         }
     }
 

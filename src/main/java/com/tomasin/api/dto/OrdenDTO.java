@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import com.tomasin.api.dto.VehiculoDTO.VehiculoResponseDTO;
 import com.tomasin.api.enums.EstadoOrden;
 import com.tomasin.api.enums.NivelCombustible;
 import com.tomasin.api.model.OrdenServicio;
@@ -21,8 +22,7 @@ public class OrdenDTO {
             EstadoOrden estado,
             Long idCliente,
             String nombreCliente,
-            Long idVehiculo,
-            String placaVehiculo,
+            VehiculoResponseDTO vehiculo,
             Integer kilometraje,
             NivelCombustible nivelCombustible,
             BigDecimal costoTotal,
@@ -40,8 +40,7 @@ public class OrdenDTO {
                     o.getEstado(),
                     o.getCliente().getId(),
                     o.getCliente().getNombres() + " " + o.getCliente().getApellidos(),
-                    o.getVehiculo().getId(),
-                    o.getVehiculo().getPlaca(),
+                    VehiculoResponseDTO.toResponse(o.getVehiculo()),
                     o.getKilometraje(),
                     o.getNivelCombustible(),
                     o.getCostoTotal(),

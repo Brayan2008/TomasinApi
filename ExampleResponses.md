@@ -3,19 +3,19 @@
 ## Índice
 
 - [Convenciones](#convenciones)
-- [1. Auth — `/auth`](#1-auth---auth)
-- [2. Usuarios — `/api/usuarios`](#2-usuarios---apiusuarios)
-- [3. Roles — `/api/roles`](#3-roles---apiroles)
-- [4. Clientes — `/api/clientes`](#4-clientes---apiclientes)
-- [5. Marcas — `/api/marcas`](#5-marcas---apimarcas)
-- [6. Modelos — `/api/modelos`](#6-modelos---apimodelos)
-- [7. Vehículos — `/api/vehiculos`](#7-vehículos---apivehiculos)
-- [8. Órdenes de Servicio — `/api/ordenes`](#8-órdenes-de-servicio---apiordenes)
-- [9. Servicios Asignados — `/api/servicios-asignados`](#9-servicios-asignados---apiservicios-asignados)
-- [10. Servicios (Catálogo) — `/api/servicios`](#10-servicios-catálogo---apiservicios)
-- [11. Checklist de Orden — `/api/checklist`](#11-checklist-de-orden---apichecklist)
-- [12. Daños de Orden — `/api/danios`](#12-daños-de-orden---apidanios)
-- [13. Fotos de Orden — `/api/fotos`](#13-fotos-de-orden---apifotos)
+- [1. Auth — `/auth`](#1-auth--auth)
+- [2. Usuarios — `/api/usuarios`](#2-usuarios--apiusuarios)
+- [3. Roles — `/api/roles`](#3-roles--apiroles)
+- [4. Clientes — `/api/clientes`](#4-clientes--apiclientes)
+- [5. Marcas — `/api/marcas`](#5-marcas--apimarcas)
+- [6. Modelos — `/api/modelos`](#6-modelos--apimodelos)
+- [7. Vehículos — `/api/vehiculos`](#7-vehículos--apivehiculos)
+- [8. Órdenes de Servicio — `/api/ordenes`](#8-órdenes-de-servicio--apiordenes)
+- [9. Servicios Asignados — `/api/servicios-asignados`](#9-servicios-asignados--apiservicios-asignados)
+- [10. Servicios (Catálogo) — `/api/servicios`](#10-servicios-catálogo--apiservicios)
+- [11. Checklist de Orden — `/api/checklist`](#11-checklist-de-orden--apichecklist)
+- [12. Daños de Orden — `/api/danios`](#12-daños-de-orden--apidanios)
+- [13. Fotos de Orden — `/api/fotos`](#13-fotos-de-orden--apifotos)
 - [Resumen de Enums](#resumen-de-enums)
 
 ---
@@ -432,8 +432,10 @@
   {
     "id": 1,
     "nombre": "Corolla",
-    "idMarca": 1,
-    "nombreMarca": "Toyota"
+    "marca": {
+      "id": 1,
+      "nombre": "Toyota"
+    }
   }
 ]
 ```
@@ -449,8 +451,10 @@
 {
   "id": 1,
   "nombre": "Corolla",
-  "idMarca": 1,
-  "nombreMarca": "Toyota"
+  "marca": {
+    "id": 1,
+    "nombre": "Toyota"
+  }
 }
 ```
 
@@ -475,8 +479,10 @@
 {
   "id": 2,
   "nombre": "Corolla",
-  "idMarca": 1,
-  "nombreMarca": "Toyota"
+  "marca": {
+    "id": 1,
+    "nombre": "Toyota"
+  }
 }
 ```
 
@@ -519,10 +525,23 @@
     "color": "Rojo",
     "anio": 2022,
     "ultimoKm": 50000,
-    "idModelo": 1,
-    "nombreModelo": "Corolla",
-    "idCliente": 1,
-    "nombreCliente": "Juan Carlos Perez Lopez"
+    "modelo": {
+      "id": 1,
+      "nombre": "Corolla",
+      "marca": {
+        "id": 1,
+        "nombre": "Toyota"
+      }
+    },
+    "cliente": {
+      "id": 1,
+      "tipoDocumento": "DNI",
+      "numeroDocumento": "12345678",
+      "nombres": "Juan Carlos",
+      "apellidos": "Perez Lopez",
+      "telefono": "987654321",
+      "direccion": "Av. Siempre Viva 123"
+    }
   }
 ]
 ```
@@ -543,10 +562,23 @@
   "color": "Rojo",
   "anio": 2022,
   "ultimoKm": 50000,
-  "idModelo": 1,
-  "nombreModelo": "Corolla",
-  "idCliente": 1,
-  "nombreCliente": "Juan Carlos Perez Lopez"
+  "modelo": {
+    "id": 1,
+    "nombre": "Corolla",
+    "marca": {
+      "id": 1,
+      "nombre": "Toyota"
+    }
+  },
+  "cliente": {
+    "id": 1,
+    "tipoDocumento": "DNI",
+    "numeroDocumento": "12345678",
+    "nombres": "Juan Carlos",
+    "apellidos": "Perez Lopez",
+    "telefono": "987654321",
+    "direccion": "Av. Siempre Viva 123"
+  }
 }
 ```
 
@@ -581,10 +613,23 @@
   "color": "Rojo",
   "anio": 2022,
   "ultimoKm": null,
-  "idModelo": 1,
-  "nombreModelo": "Corolla",
-  "idCliente": 1,
-  "nombreCliente": "Juan Carlos Perez Lopez"
+  "modelo": {
+    "id": 1,
+    "nombre": "Corolla",
+    "marca": {
+      "id": 1,
+      "nombre": "Toyota"
+    }
+  },
+  "cliente": {
+    "id": 1,
+    "tipoDocumento": "DNI",
+    "numeroDocumento": "12345678",
+    "nombres": "Juan Carlos",
+    "apellidos": "Perez Lopez",
+    "telefono": "987654321",
+    "direccion": "Av. Siempre Viva 123"
+  }
 }
 ```
 
@@ -628,8 +673,32 @@
     "estado": "REGISTRADA",
     "idCliente": 1,
     "nombreCliente": "Juan Carlos Perez Lopez",
-    "idVehiculo": 1,
-    "placaVehiculo": "ABC-123",
+    "vehiculo": {
+      "id": 1,
+      "placa": "ABC-123",
+      "chasis": "1HGBH41JXMN109186",
+      "motor": "2ZR-FE",
+      "color": "Rojo",
+      "anio": 2022,
+      "ultimoKm": 50000,
+      "modelo": {
+        "id": 1,
+        "nombre": "Corolla",
+        "marca": {
+          "id": 1,
+          "nombre": "Toyota"
+        }
+      },
+      "cliente": {
+        "id": 1,
+        "tipoDocumento": "DNI",
+        "numeroDocumento": "12345678",
+        "nombres": "Juan Carlos",
+        "apellidos": "Perez Lopez",
+        "telefono": "987654321",
+        "direccion": "Av. Siempre Viva 123"
+      }
+    },
     "kilometraje": 50000,
     "nivelCombustible": "F",
     "costoTotal": 400.00,
@@ -681,8 +750,32 @@
   "estado": "REGISTRADA",
   "idCliente": 1,
   "nombreCliente": "Juan Carlos Perez Lopez",
-  "idVehiculo": 1,
-  "placaVehiculo": "ABC-123",
+  "vehiculo": {
+    "id": 1,
+    "placa": "ABC-123",
+    "chasis": "1HGBH41JXMN109186",
+    "motor": "2ZR-FE",
+    "color": "Rojo",
+    "anio": 2022,
+    "ultimoKm": 50000,
+    "modelo": {
+      "id": 1,
+      "nombre": "Corolla",
+      "marca": {
+        "id": 1,
+        "nombre": "Toyota"
+      }
+    },
+    "cliente": {
+      "id": 1,
+      "tipoDocumento": "DNI",
+      "numeroDocumento": "12345678",
+      "nombres": "Juan Carlos",
+      "apellidos": "Perez Lopez",
+      "telefono": "987654321",
+      "direccion": "Av. Siempre Viva 123"
+    }
+  },
   "kilometraje": 50000,
   "nivelCombustible": "F",
   "costoTotal": 0.00,

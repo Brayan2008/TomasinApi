@@ -52,6 +52,12 @@ public class ModeloService implements IModeloService {
     }
 
     @Override
+    public List<ModeloResponseDTO> buscarPorMarca(Long idMarca) {
+        return modeloRepository.findByMarcaId(idMarca)
+                .stream().map(ModeloResponseDTO::toResponse).toList();
+    }
+
+    @Override
     public boolean eliminar(Long id) {
         if (modeloRepository.existsById(id)) {
             modeloRepository.deleteById(id);

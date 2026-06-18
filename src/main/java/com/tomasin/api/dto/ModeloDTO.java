@@ -21,6 +21,18 @@ public class ModeloDTO {
         }
     }
 
+    public record ModeloWithoutMarcaDTO(
+            Long id,
+            String nombre
+    ) {
+        public static ModeloWithoutMarcaDTO toResponse(Modelo m) {
+            return new ModeloWithoutMarcaDTO(
+                    m.getId(),
+                    m.getNombre()
+                );
+        }
+    }
+
     public record ModeloRequestDTO(@NotBlank String nombre, @NotNull Long idMarca) {
 
         public Modelo toEntity() {

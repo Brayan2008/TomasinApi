@@ -43,6 +43,16 @@ public class ModeloController {
         return modelo.map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
+    
+    @GetMapping("/marca/{idMarca}")
+    public ResponseEntity<?> buscarPorMarca(@PathVariable Long idMarca) {
+        var modelos = modeloService.buscarPorMarca(idMarca);
+        if (modelos.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(modelos);
+    }
+
 
     @PostMapping
     public ResponseEntity<?> crear(@Valid @RequestBody ModeloRequestDTO dto) {

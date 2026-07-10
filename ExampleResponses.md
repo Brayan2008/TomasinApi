@@ -1091,6 +1091,14 @@
 
 ---
 
+### `GET /api/danios/orden/{idOrden}`
+
+**ResponseBody `200 OK`** — `List<OrdenDanioResponseDTO>` (mismo formato que `GET /api/danios`).
+
+**`204 No Content`** — No hay daños para esa orden.
+
+---
+
 ### `GET /api/danios/{id}`
 
 **ResponseBody `200 OK`** — `OrdenDanioResponseDTO` (mismo formato de arriba).
